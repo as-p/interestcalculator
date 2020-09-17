@@ -154,7 +154,7 @@
   </div>
 </form>
 
-<div class="container">
+<div class="container" *ngIf="amortizationValues?.length">
   <div class="row">
     <table class="table table-bordered">
       <thead>
@@ -174,7 +174,7 @@
           <td class="text-md-center">
             {{ emi.totalPayment | currency: "INR" }}
           </td>
-          <td class="text-md-center">{{ emi.balance | currency: "INR" }}</td>
+          <td class="text-md-center">{{ (emi.balance<0 ? 0:emi.balance )| currency: "INR" }}</td>
         </tr>
       </tbody>
     </table>
