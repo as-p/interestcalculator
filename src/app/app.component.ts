@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
     interest: null,
     balance: null,
     totalPayment: null,
+    startingLoanBalance: null,
   };
 
   amortizationValues: IAmortization[] = [];
@@ -96,10 +97,9 @@ export class AppComponent implements OnInit {
     this.amortizationValues = [];
     let emi = this.calculateEmi();
     // console.log(emi);
-
     let loanAmount = this.LoanCalValue.loanAmount;
+    let startingLoanBalance = loanAmount;
     // console.log(this.convertYearIntoMonth());
-
     for (let i = 0; i < this.convertYearIntoMonth(); i++) {
       let interest = loanAmount * this.calculateRateOfInterestMonthly();
       if (installmentCount1 < 12) {
@@ -109,14 +109,14 @@ export class AppComponent implements OnInit {
         this.amortization.installment = installmentCount;
         installmentCount++;
       }
-
       let principal = emi - interest;
       // console.log(this.amortizationValues[i].installment);
-
       this.amortization.principal = principal;
       this.amortization.interest = interest;
       this.totalIntrest += interest;
+      this.amortization.startingLoanBalance = startingLoanBalance;
       loanAmount = loanAmount - principal;
+      startingLoanBalance = loanAmount;
       this.amortization.balance = loanAmount;
       this.amortization.totalPayment = emi;
       this.totalAmountPaid += emi;
@@ -128,6 +128,7 @@ export class AppComponent implements OnInit {
         interest: null,
         balance: null,
         totalPayment: null,
+        startingLoanBalance: null,
       };
       interest = 0;
       principal = 0;

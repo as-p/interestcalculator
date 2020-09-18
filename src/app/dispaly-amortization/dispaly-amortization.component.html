@@ -3,7 +3,8 @@
     <table class="table table-bordered ">
       <thead class="thead-light">
         <tr>
-          <th class="text-md-center ">Installments</th>
+          <th class="text-md-center" style="width: 30px;">Installments</th>
+          <th class="text-md-center">Starting Loan Amount</th>
           <th class="text-md-center">Principal Amount</th>
           <th class="text-md-center">Interest Amount</th>
           <th class="text-md-center">Payments</th>
@@ -13,6 +14,7 @@
       <tbody>
         <tr *ngFor="let emi of amortizationValues">
           <th class="text-md-center" scope="row">{{ emi.installment?'Year '+emi.installment:'' }}</th>
+          <td class="text-md-center">{{ emi.startingLoanBalance | roundTheNumber | currency: "INR" }}</td>
           <td class="text-md-center">{{ emi.principal | roundTheNumber | currency: "INR" }}</td>
           <td class="text-md-center">{{ emi.interest | roundTheNumber | currency: "INR"}}</td>
           <td class="text-md-center">{{ emi.totalPayment | roundTheNumber  | currency: "INR" }}</td>
