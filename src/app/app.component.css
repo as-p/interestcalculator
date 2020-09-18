@@ -8,3 +8,11 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .margin-top {
   margin-top: 31px;
 }
+
+/* .bgimg {
+  background-color:rgb(79, 80, 80);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  height: 5px;
+} */

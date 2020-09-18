@@ -1,4 +1,4 @@
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid ">
   <div class="container">
     <h1 class="display-5">Loan Repayment Calculator</h1>
   </div>
@@ -15,9 +15,9 @@
               <input formControlName="loanAmount" type="number" class="form-control" id="loanAmount"
                 placeholder="Enter Amount" class="form-control" />
               <div *ngIf="loanAmount.touched && loanAmount.invalid">
-                <div class="alert alert-danger" *ngIf="loanAmount.errors.required">
+                <span class="text-danger" *ngIf="loanAmount.errors.required">
                   Required!!
-                </div>
+                </span>
               </div>
             </div>
 
@@ -26,9 +26,9 @@
               <input formControlName="loanTerm" type="number" class="form-control" id="loanTerm"
                 placeholder="Enter Loan Term" class="form-control" />
               <div *ngIf="loanTerm.touched && loanTerm.invalid">
-                <div class="alert alert-danger" *ngIf="loanTerm.errors.required">
+                <span class="text-danger" *ngIf="loanTerm.errors.required">
                   Required!!
-                </div>
+                </span>
               </div>
             </div>
 
@@ -37,9 +37,9 @@
               <input formControlName="interestRate" type="number" class="form-control" id="interestRate"
                 placeholder="Enter Interest Rate" class="form-control" />
               <div *ngIf="interestRate.touched && interestRate.invalid">
-                <div class="alert alert-danger" *ngIf="interestRate.errors.required">
+                <span class="text-danger" *ngIf="interestRate.errors.required">
                   Required!!
-                </div>
+                </span>
               </div>
             </div>
             <br />
@@ -53,9 +53,9 @@
                 </option>
               </select>
               <div *ngIf="loanType.touched && loanType.invalid">
-                <div class="alert alert-danger" *ngIf="loanType.errors.required">
+                <span class="text-danger" *ngIf="loanType.errors.required">
                   Required!!
-                </div>
+                </span>
               </div>
             </div>
             <div class="form-group">
@@ -81,13 +81,13 @@
                           (loanAmount.touched && loanAmount.invalid) ||
                           (interestRate.touched && interestRate.invalid)
                         ">
-                <div class="alert alert-danger" *ngIf="
+                <span class="text-danger" *ngIf="
                             loanTerm.errors?.negativeValue ||
                             loanAmount.errors?.negativeValue ||
                             termType.errors?.negativeValue
                           ">
                   Remove Negative Value!!
-                </div>
+                </span>
               </div>
             </div>
           </div>

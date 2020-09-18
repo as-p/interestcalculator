@@ -1,6 +1,13 @@
 <div class="container mt-5" *ngIf="amortizationValues?.length">
   <div class="row">
-    <table class="table table-bordered ">
+    <div class="col">
+      <div class="float-right">
+        <button class="btn btn-success text-white" type="button" (click)="exportTableAsExcelFile(tableData)">Download
+          Report</button>
+      </div>
+
+    </div>
+    <table class="table table-bordered mt-2" #tableData>
       <thead class="thead-light">
         <tr>
           <th class="text-md-center" style="width: 30px;">Installments</th>
