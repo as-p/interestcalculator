@@ -1,0 +1,26 @@
+<div class="container mt-5" *ngIf="amortizationValues?.length">
+  <div class="row">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th class="text-md-center ">Installments</th>
+          <th class="text-md-center ">Principal Amount</th>
+          <th class="text-md-center ">Interest Amount</th>
+          <th class="text-md-center ">Payments</th>
+          <th class="text-md-center ">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emi of amortizationValues">
+          <th class="text-md-center " scope="row">{{ emi.installment?'Year '+emi.installment:'' }}</th>
+          <td class="text-md-center ">{{ emi.principal | roundTheNumber | currency: "INR" }}</td>
+          <td class="text-md-center ">{{ emi.interest | roundTheNumber | currency: "INR"}}</td>
+          <td class="text-md-center ">{{ emi.totalPayment | roundTheNumber  | currency: "INR" }}</td>
+          <td class="text-md-center ">
+            {{ (emi.balance < 0 ? 0 : emi.balance) | roundTheNumber | currency: "INR"  }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

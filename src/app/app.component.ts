@@ -4,7 +4,6 @@ import { ILoanCalculatorField } from './ILoanCalculatorField';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -16,9 +15,10 @@ import {
 })
 export class AppComponent implements OnInit {
   myForm: FormGroup;
+  change = 1;
   emiValue = 0;
   totalIntrest = 0;
-  totalAmount = 0;
+  totalAmountPaid = 0;
   LoanCalValue: ILoanCalculatorField;
   amortization: IAmortization = {
     installment: null,
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
     { id: 6, name: 'Other' },
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   get loanAmount() {
     return this.myForm.get('loanAmount');
@@ -70,13 +70,13 @@ export class AppComponent implements OnInit {
 
   onSubmit(form: FormGroup) {
     this.LoanCalValue = form.value;
+    this.totalAmountPaid = 0;
     this.totalIntrest = 0;
     this.calculateAmortization();
     console.log(this.amortizationValues);
 
-    this.totalAmount = +this.LoanCalValue.loanAmount + this.totalIntrest;
-    this.emiValue = Math.round(this.calculateEmi());
-    console.log(this.amortizationValues);
+    this.emiValue = this.calculateEmi();
+    // console.log(this.amortizationValues);
   }
 
   calculateRateOfInterestMonthly(): number {
@@ -84,29 +84,42 @@ export class AppComponent implements OnInit {
   }
 
   convertYearIntoMonth(): number {
-    if (this.LoanCalValue.termType === 1)
+    if (this.LoanCalValue.termType == 1)
       return this.LoanCalValue.loanTerm * 12;
     else return this.LoanCalValue.loanTerm;
   }
 
   calculateAmortization() {
+    let installmentCount1 = 1;
+    let installmentCount = 1;
     // console.log(this.amortization);
     this.amortizationValues = [];
     let emi = this.calculateEmi();
+    // console.log(emi);
+
     let loanAmount = this.LoanCalValue.loanAmount;
     // console.log(this.convertYearIntoMonth());
 
     for (let i = 0; i < this.convertYearIntoMonth(); i++) {
       let interest = loanAmount * this.calculateRateOfInterestMonthly();
+      if (installmentCount1 < 12) {
+        installmentCount1++;
+      } else {
+        installmentCount1 = 1;
+        this.amortization.installment = installmentCount;
+        installmentCount++;
+      }
+
       let principal = emi - interest;
       // console.log(this.amortizationValues[i].installment);
-      this.amortization.installment = 1 + i;
-      this.amortization.principal = Math.round(principal);
-      this.amortization.interest = Math.round(interest);
-      this.totalIntrest += Math.round(interest);
-      loanAmount = Math.round(loanAmount - principal);
-      this.amortization.balance = Math.round(loanAmount);
-      this.amortization.totalPayment = Math.round(emi);
+
+      this.amortization.principal = principal;
+      this.amortization.interest = interest;
+      this.totalIntrest += interest;
+      loanAmount = loanAmount - principal;
+      this.amortization.balance = loanAmount;
+      this.amortization.totalPayment = emi;
+      this.totalAmountPaid += emi;
       // console.log(this.amortization);
       this.amortizationValues.push(this.amortization);
       this.amortization = {
@@ -123,6 +136,8 @@ export class AppComponent implements OnInit {
 
   calculateEmi() {
     let rateOfIntrest = this.calculateRateOfInterestMonthly() + 1;
+    // console.log(+this.convertYearIntoMonth());
+
     return (
       (this.LoanCalValue.loanAmount *
         this.calculateRateOfInterestMonthly() *
@@ -131,14 +146,17 @@ export class AppComponent implements OnInit {
     );
   }
   onChangeValue() {
+    // this.change = !this.change;
     let loanTermValue = this.myForm.get('loanTerm').value;
     if (loanTermValue) {
       if (this.myForm.get('termType').value == 1) {
+        this.change = 1;
         this.myForm.patchValue({
           loanTerm: loanTermValue / 12,
         });
       }
       if (this.myForm.get('termType').value == 2) {
+        this.change = 2;
         this.myForm.patchValue({
           loanTerm: loanTermValue * 12,
         });

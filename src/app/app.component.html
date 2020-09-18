@@ -5,188 +5,140 @@
 </div>
 
 <form [formGroup]="myForm" (ngSubmit)="onSubmit(myForm)">
-  <div class="container">
+  <div class="container card">
     <div class="row">
-      <div class="col-md-3 border border-darken-4">
-        <div class="form-group">
-          <label for="loanAmount">Enter Loan Amount</label>
+      <div class="col-md-6">
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="loanAmount">Enter Loan Amount</label>
+              <input formControlName="loanAmount" type="number" class="form-control" id="loanAmount"
+                placeholder="Enter Amount" class="form-control" />
+              <div *ngIf="loanAmount.touched && loanAmount.invalid">
+                <div class="alert alert-danger" *ngIf="loanAmount.errors.required">
+                  Required!!
+                </div>
+              </div>
+            </div>
 
-          <input
-            formControlName="loanAmount"
-            type="number"
-            class="form-control"
-            id="loanAmount"
-            placeholder="Enter Amount"
-            class="form-control"
-          />
-          <div *ngIf="loanAmount.touched && loanAmount.invalid">
-            <div class="alert alert-danger" *ngIf="loanAmount.errors.required">
-              Requierd!!
+            <div class="form-group">
+              <label for="loanTerm">Enter Loan Tenure</label>
+              <input formControlName="loanTerm" type="number" class="form-control" id="loanTerm"
+                placeholder="Enter Loan Term" class="form-control" />
+              <div *ngIf="loanTerm.touched && loanTerm.invalid">
+                <div class="alert alert-danger" *ngIf="loanTerm.errors.required">
+                  Required!!
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="interestRate">Enter Interest Rate </label>
+              <input formControlName="interestRate" type="number" class="form-control" id="interestRate"
+                placeholder="Enter Interest Rate" class="form-control" />
+              <div *ngIf="interestRate.touched && interestRate.invalid">
+                <div class="alert alert-danger" *ngIf="interestRate.errors.required">
+                  Required!!
+                </div>
+              </div>
+            </div>
+            <br />
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="LoanType">Select Loan Type</label>
+              <select class="form-control" formControlName="loanType" id="LoanType">
+                <option *ngFor="let lType of loanTypeValue" [value]="lType.id">
+                  {{ lType.name }}
+                </option>
+              </select>
+              <div *ngIf="loanType.touched && loanType.invalid">
+                <div class="alert alert-danger" *ngIf="loanType.errors.required">
+                  Required!!
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="btn-group btn-group-toggle btn-block margin-top" data-toggle="buttons">
+                <label class="btn btn-primary" [ngClass]="change===1?'active':''">
+                  <input type="radio" (change)="onChangeValue()" formControlName="termType" id="option1" value="1"
+                    autocomplete="off"> Year
+                </label>
+                <label class="btn btn-primary " [ngClass]="change===2?'active':''">
+                  <input type="radio" (change)="onChangeValue()" formControlName="termType" id="option2" value="2"
+                    autocomplete="off"> Month
+                </label>
+              </div>
+            </div>
+
+            <!-- <div class="form-group">
+              <label for="termType">Tenure Type</label>
+              <select (change)="onChangeValue()" class="form-control" formControlName="termType" id="termType">
+                <option value="1">Year</option>
+                <option value="2">Month</option>
+              </select>
+              <div *ngIf="termType.touched && termType.invalid">
+                <div class="alert alert-danger" *ngIf="termType.errors.required">
+                  Required!!
+                </div>
+              </div>
+            </div> -->
+
+            <div class="form-group">
+              <label for="">&nbsp;</label>
+              <button [disabled]="myForm.invalid" type="submit" class="btn btn-primary btn-block">
+                Calculate EMI
+              </button>
+              <div *ngIf="
+                          (loanTerm.touched && loanTerm.invalid) ||
+                          (loanAmount.touched && loanAmount.invalid) ||
+                          (interestRate.touched && interestRate.invalid)
+                        ">
+                <div class="alert alert-danger" *ngIf="
+                            loanTerm.errors?.negativeValue ||
+                            loanAmount.errors?.negativeValue ||
+                            termType.errors?.negativeValue
+                          ">
+                  Remove Negative Value!!
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="loanTerm">Enter Loan Tenure</label>
-          <input
-            formControlName="loanTerm"
-            type="number"
-            class="form-control"
-            id="loanTerm"
-            placeholder="Enter Loan Term"
-            class="form-control"
-          />
-          <div *ngIf="loanTerm.touched && loanTerm.invalid">
-            <div class="alert alert-danger" *ngIf="loanTerm.errors.required">
-              Requierd!!
-            </div>
-          </div>
-        </div>
 
-        <div class="form-group">
-          <label for="interestRate">Enter Interest Rate </label>
-          <input
-            formControlName="interestRate"
-            type="number"
-            class="form-control"
-            id="interestRate"
-            placeholder="Enter Interest Rate"
-            class="form-control"
-          />
-          <div *ngIf="interestRate.touched && interestRate.invalid">
-            <div
-              class="alert alert-danger"
-              *ngIf="interestRate.errors.required"
-            >
-              Requierd!!
-            </div>
-          </div>
-        </div>
-        <br />
+
       </div>
-      <div class="col-md-3 border border-darken-4">
-        <div class="form-group">
-          <label for="LoanType">Select Loan Type</label>
-          <select class="form-control" formControlName="loanType" id="LoanType">
-            <option *ngFor="let lType of loanTypeValue" [value]="lType.id">
-              {{ lType.name }}
-            </option>
-          </select>
-          <div *ngIf="loanType.touched && loanType.invalid">
-            <div class="alert alert-danger" *ngIf="loanType.errors.required">
-              Requierd!!
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="termType">Tenure Type</label>
-          <select
-            (change)="onChangeValue()"
-            class="form-control"
-            formControlName="termType"
-            id="termType"
-          >
-            <option value="1">Year</option>
-            <option value="2">Month</option>
-          </select>
-          <div *ngIf="termType.touched && termType.invalid">
-            <div class="alert alert-danger" *ngIf="termType.errors.required">
-              Requierd!!
-            </div>
-          </div>
-        </div>
-        <br />
-        <div class="form-group">
-          <button
-            [disabled]="myForm.invalid"
-            type="submit"
-            class="btn btn-primary btn-block"
-          >
-            Calculate EMI
-          </button>
-          <div
-            *ngIf="
-              (loanTerm.touched && loanTerm.invalid) ||
-              (loanAmount.touched && loanAmount.invalid) ||
-              (interestRate.touched && interestRate.invalid)
-            "
-          >
-            <div
-              class="alert alert-danger"
-              *ngIf="
-                loanTerm.errors.negativeValue ||
-                loanAmount.errors.negativeValue ||
-                termType.errors.negativeValue
-              "
-            >
-              Remove Negative Value!!
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 border border-darken-4">
+      <div class="col-md-6">
         <div class="row">
-          <div class="card col-md-12" style="height: 120px; width: 500px">
+          <div class="card col-md-12 border border-primary">
             <div class="card-body col-md-8 offset-2">
               <h6 class="text-md-center">MINIMUM MONTHLY PAYMENT</h6>
-              <h3 class="text-md-center">{{ emiValue | currency: "INR" }}</h3>
+              <h3 class="text-md-center">{{ emiValue | roundTheNumber | currency: "INR" }}</h3>
             </div>
           </div>
-          <div
-            class="card col-md-6 border border-darken-4"
-            style="height: 120px; width: 500px"
-          >
+          <div class="card col-md-12 border border-primary">
             <div class="card-body">
-              <h6 class="text-md-center"><small>TOTAL AMOUNT PAID</small></h6>
+              <h6 class="text-md-center">TOTAL AMOUNT PAID</h6>
               <h3 class="text-md-center">
-                {{ totalAmount | currency: "INR" }}
+                {{ totalAmountPaid | roundTheNumber | currency: "INR" }}
               </h3>
             </div>
           </div>
-          <div
-            class="card col-md-6 border border-darken-4"
-            style="height: 120px; width: 500px"
-          >
+          <div class="card col-md-12 border border-primary">
             <div class="card-body">
-              <h6 class="text-md-center"><small>TOTAL INTEREST PAID</small></h6>
+              <h6 class="text-md-center">TOTAL INTEREST PAID</h6>
               <h3 class="text-md-center">
-                {{ totalIntrest | currency: "INR" }}
+                {{ totalIntrest | roundTheNumber | currency: "INR" }}
               </h3>
             </div>
           </div>
         </div>
+
+
+
       </div>
     </div>
   </div>
 </form>
-
-<div class="container mt-5"  *ngIf="amortizationValues?.length">
-  <div class="row">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th class="text-md-center" scope="col">Installments</th>
-          <th class="text-md-center" scope="col">Principal Amount</th>
-          <th class="text-md-center" scope="col">Interest Amount</th>
-          <th class="text-md-center" scope="col">Payments</th>
-          <th class="text-md-center" scope="col">Balance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let emi of amortizationValues">
-          <th class="text-md-center" scope="row">{{ emi.installment }}</th>
-          <td class="text-md-center">{{ emi.principal | currency: "INR" }}</td>
-          <td class="text-md-center">{{ emi.interest | currency: "INR" }}</td>
-          <td class="text-md-center">
-            {{ emi.totalPayment | currency: "INR" }}
-          </td>
-          <td class="text-md-center">
-            {{ (emi.balance < 0 ? 0 : emi.balance) | currency: "INR" }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<dispaly-amortization [amortizationValues]="amortizationValues"></dispaly-amortization>
