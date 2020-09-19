@@ -66,8 +66,8 @@ export class AppComponent implements OnInit {
         '5000',
         [Validators.required, NegativeCheckingValidator.isNegative],
       ],
-      loanTerm: ['1', [Validators.required]],
-      interestRate: ['10', [Validators.required]],
+      loanTerm: ['1', [Validators.required, NegativeCheckingValidator.isNegative]],
+      interestRate: ['10', [Validators.required, NegativeCheckingValidator.isNegative]],
       loanType: ['', [Validators.required]],
       termType: ['1', [Validators.required]],
     });
