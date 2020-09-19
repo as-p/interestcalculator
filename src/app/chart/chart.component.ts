@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { FormsModule } from '@angular/forms';
-import { Label } from 'ng2-charts';
+import { Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip, SingleDataSet } from 'ng2-charts';
 
 @Component({
   selector: 'chart',
@@ -38,16 +38,16 @@ export class ChartComponent implements OnInit {
     { data: this.barIntrestTotalPayment, label: 'Total Interest' }
   ];
   //Pie Chart
-  public pieChartLabels: string[] = ['Total Amount Paid', 'Total Intrest Paid'];
-  public pieChartData: number[];
-  public pieChartType: string;
-
-  constructor() {
-  }
-
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public pieChartLabels: Label[] = ['Total Amount Paid', 'Total Intrest Paid'];
+  public pieChartData: SingleDataSet;
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
   ngOnInit(): void {
     this.pieChartType = 'pie';
-
   }
 
 }

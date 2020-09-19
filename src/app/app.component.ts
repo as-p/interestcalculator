@@ -190,6 +190,7 @@ export class AppComponent implements OnInit {
 
   createPieChartValue() {
     // this.pieChart.push(Math.round(this.emiValue));
+    this.pieChart = [];
     this.pieChart.push(Math.round(this.totalAmountPaid));
     this.pieChart.push(Math.round(this.totalIntrest));
   }

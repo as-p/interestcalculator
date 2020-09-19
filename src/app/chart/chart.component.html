@@ -16,9 +16,8 @@
         Bar Chart
       </div>
       <div class="card-body">
-        <canvas (chartClick)="chartClicked($event)" (chartHover)="chartHovered($event)" [chartType]="barChartType"
-          [datasets]="barChartData" [labels]="barChartLabels" [legend]="barChartLegend" [options]="barChartOptions"
-          baseChart>
+        <canvas [chartType]="barChartType" [datasets]="barChartData" [labels]="barChartLabels" [legend]="barChartLegend"
+          [options]="barChartOptions" baseChart>
         </canvas>
       </div>
 
@@ -30,9 +29,14 @@
         Pie Chart
       </div>
       <div class="card-body">
-        <canvas (chartClick)="chartClicked($event)" (chartHover)="chartHovered($event)" [chartType]="pieChartType"
-          [data]="pieChartData" [labels]="pieChartLabels" baseChart height="150px">
-        </canvas>
+        <canvas baseChart 
+    [data]="pieChartData" 
+    [labels]="pieChartLabels" 
+    [chartType]="pieChartType"
+    [options]="pieChartOptions"
+    [plugins]="pieChartPlugins"
+    [legend]="pieChartLegend">
+  </canvas>
       </div>
     </div>
   </div>
