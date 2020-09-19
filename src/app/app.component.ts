@@ -15,6 +15,7 @@ import {
 })
 export class AppComponent implements OnInit {
   myForm: FormGroup;
+  pieChart = [];
   barTotalPayment = [];
   barIntrestTotalPayment = [];
   barYear = [];
@@ -24,9 +25,6 @@ export class AppComponent implements OnInit {
   totalAmountPaid = 0;
   LoanCalValue: ILoanCalculatorField;
   amortization: IAmortization = {
-    // barTotalPayment: null,
-    // barIntrestTotalPayment: null,
-    // barPrincipalPayment: null,
     installment: null,
     principal: null,
     interest: null,
@@ -81,8 +79,8 @@ export class AppComponent implements OnInit {
     this.totalIntrest = 0;
     this.calculateAmortization();
     // console.log(this.amortizationValues);
-
     this.emiValue = this.calculateEmi();
+    this.createPieChartValue();
     // console.log(this.amortizationValues);
   }
 
@@ -115,13 +113,6 @@ export class AppComponent implements OnInit {
     // console.log(this.convertYearIntoMonth());
     for (let i = 0; i < this.convertYearIntoMonth(); i++) {
       let interest = loanAmount * this.calculateRateOfInterestMonthly();
-      // if (installmentCount1 < 12) {
-      //   installmentCount1++;
-      // } else {
-      //   installmentCount1 = 1;
-      //   this.amortization.installment = installmentCount;
-      //   installmentCount++;
-      // }
       let principal = emi - interest;
       // console.log(this.amortizationValues[i].installment);
       this.amortization.principal = principal;
@@ -154,9 +145,6 @@ export class AppComponent implements OnInit {
       // console.log(this.amortization);
       this.amortizationValues.push(this.amortization);
       this.amortization = {
-        // barTotalPayment: null,
-        // barIntrestTotalPayment: null,
-        // barPrincipalPayment: null,
         installment: null,
         principal: null,
         interest: null,
@@ -167,9 +155,7 @@ export class AppComponent implements OnInit {
       interest = 0;
       principal = 0;
     }
-    // console.log(this.barIntrestTotalPayment);
-    // console.log(this.barTotalPayment);
-    // console.log(this.barYear);
+
   }
 
   calculateEmi() {
@@ -200,5 +186,11 @@ export class AppComponent implements OnInit {
         });
       }
     }
+  }
+
+  createPieChartValue() {
+    // this.pieChart.push(Math.round(this.emiValue));
+    this.pieChart.push(Math.round(this.totalAmountPaid));
+    this.pieChart.push(Math.round(this.totalIntrest));
   }
 }

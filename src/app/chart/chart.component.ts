@@ -9,16 +9,20 @@ import { Label } from 'ng2-charts';
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
-  @Input() set barTotalPayment(info) {
-    this.barChartData[0].data = info;
+  @Input() set barTotalPayment(data) {
+    this.barChartData[0].data = data;
 
   };
-  @Input() set barIntrestTotalPayment(info) {
-    this.barChartData[1].data = info;
+  @Input() set barIntrestTotalPayment(data) {
+    this.barChartData[1].data = data;
   };
-  @Input() set barYear(info) {
-    this.barChartLabels = info;
+  @Input() set barYear(data) {
+    this.barChartLabels = data;
   };
+
+  @Input() set pieChart(data) {
+    this.pieChartData = data;
+  }
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -31,14 +35,19 @@ export class ChartComponent implements OnInit {
 
   public barChartData: ChartDataSets[] = [
     { data: this.barTotalPayment, label: 'Total Payment' },
-    { data: this.barIntrestTotalPayment, label: 'Total Intrest' }
+    { data: this.barIntrestTotalPayment, label: 'Total Interest' }
   ];
-
+  //Pie Chart
+  public pieChartLabels: string[] = ['Total Amount Paid', 'Total Intrest Paid'];
+  public pieChartData: number[];
+  public pieChartType: string;
 
   constructor() {
   }
 
   ngOnInit(): void {
+    this.pieChartType = 'pie';
+
   }
 
 }

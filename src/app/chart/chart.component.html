@@ -1,4 +1,4 @@
-<div style="display: block;">
+<!-- <div style="display: block;">
     <canvas baseChart 
       [datasets]="barChartData"
       [labels]="barChartLabels"
@@ -7,5 +7,33 @@
       [legend]="barChartLegend"
       [chartType]="barChartType">
     </canvas>
+  </div> -->
+
+<div class="row">
+  <div class="col col-sm-6">
+    <div class="card mb-3">
+      <div class="card-header">
+        Bar Chart
+      </div>
+      <div class="card-body">
+        <canvas (chartClick)="chartClicked($event)" (chartHover)="chartHovered($event)" [chartType]="barChartType"
+          [datasets]="barChartData" [labels]="barChartLabels" [legend]="barChartLegend" [options]="barChartOptions"
+          baseChart>
+        </canvas>
+      </div>
+
+    </div>
   </div>
-  
+  <div class="col col-sm-6">
+    <div class="card mb-3">
+      <div class="card-header">
+        Pie Chart
+      </div>
+      <div class="card-body">
+        <canvas (chartClick)="chartClicked($event)" (chartHover)="chartHovered($event)" [chartType]="pieChartType"
+          [data]="pieChartData" [labels]="pieChartLabels" baseChart height="150px">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>

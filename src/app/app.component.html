@@ -129,7 +129,7 @@
   </div>
 </form>
 <div class="container mt-5">
-  <chart *ngIf="barTotalPayment?.length && barIntrestTotalPayment?.length&& barYear?.length"
+  <chart *ngIf="barTotalPayment?.length && barIntrestTotalPayment?.length&& barYear?.length" [pieChart]="pieChart"
     [barTotalPayment]="barTotalPayment" [barIntrestTotalPayment]="barIntrestTotalPayment" [barYear]="barYear">
   </chart>
 </div>
