@@ -1,4 +1,7 @@
 export interface IAmortization {
+  // barTotalPayment: number;
+  // barIntrestTotalPayment: number;
+  // barPrincipalPayment: number;
   installment: number;
   principal: number;
   interest: number;

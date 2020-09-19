@@ -128,4 +128,9 @@
     </div>
   </div>
 </form>
+<div class="container mt-5">
+  <chart *ngIf="barTotalPayment?.length && barIntrestTotalPayment?.length&& barYear?.length"
+    [barTotalPayment]="barTotalPayment" [barIntrestTotalPayment]="barIntrestTotalPayment" [barYear]="barYear">
+  </chart>
+</div>
 <dispaly-amortization [amortizationValues]="amortizationValues"></dispaly-amortization>

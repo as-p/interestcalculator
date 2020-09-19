@@ -15,12 +15,18 @@ import {
 })
 export class AppComponent implements OnInit {
   myForm: FormGroup;
+  barTotalPayment = [];
+  barIntrestTotalPayment = [];
+  barYear = [];
   change = 1;
   emiValue = 0;
   totalIntrest = 0;
   totalAmountPaid = 0;
   LoanCalValue: ILoanCalculatorField;
   amortization: IAmortization = {
+    // barTotalPayment: null,
+    // barIntrestTotalPayment: null,
+    // barPrincipalPayment: null,
     installment: null,
     principal: null,
     interest: null,
@@ -74,7 +80,7 @@ export class AppComponent implements OnInit {
     this.totalAmountPaid = 0;
     this.totalIntrest = 0;
     this.calculateAmortization();
-    console.log(this.amortizationValues);
+    // console.log(this.amortizationValues);
 
     this.emiValue = this.calculateEmi();
     // console.log(this.amortizationValues);
@@ -91,8 +97,15 @@ export class AppComponent implements OnInit {
   }
 
   calculateAmortization() {
-    let installmentCount1 = 1;
-    let installmentCount = 1;
+    this.barYear = [];
+    this.barIntrestTotalPayment = [];
+    this.barTotalPayment = []
+    let barYear = (new Date()).getFullYear();
+    let barTotalPayment = 0;
+    let barIntrestTotalPayment = 0;
+    // let barPrincipalPayment = 0;
+    let installmentCount1 = 0;
+    let installmentCount = (new Date()).getFullYear();
     // console.log(this.amortization);
     this.amortizationValues = [];
     let emi = this.calculateEmi();
@@ -102,13 +115,13 @@ export class AppComponent implements OnInit {
     // console.log(this.convertYearIntoMonth());
     for (let i = 0; i < this.convertYearIntoMonth(); i++) {
       let interest = loanAmount * this.calculateRateOfInterestMonthly();
-      if (installmentCount1 < 12) {
-        installmentCount1++;
-      } else {
-        installmentCount1 = 1;
-        this.amortization.installment = installmentCount;
-        installmentCount++;
-      }
+      // if (installmentCount1 < 12) {
+      //   installmentCount1++;
+      // } else {
+      //   installmentCount1 = 1;
+      //   this.amortization.installment = installmentCount;
+      //   installmentCount++;
+      // }
       let principal = emi - interest;
       // console.log(this.amortizationValues[i].installment);
       this.amortization.principal = principal;
@@ -120,9 +133,30 @@ export class AppComponent implements OnInit {
       this.amortization.balance = loanAmount;
       this.amortization.totalPayment = emi;
       this.totalAmountPaid += emi;
+      if (installmentCount1 < 12) {
+
+        barTotalPayment += this.amortization.totalPayment;
+        barIntrestTotalPayment += this.amortization.interest;
+        // barPrincipalPayment += this.amortization.principal;    
+        installmentCount1++;
+      } if (installmentCount1 == 12 || i == this.convertYearIntoMonth() - 1) {
+        this.barYear.push(barYear);
+        ++barYear;
+        this.barTotalPayment.push(Math.round(barTotalPayment));
+        this.barIntrestTotalPayment.push(Math.round(barIntrestTotalPayment));
+        if (installmentCount1 == 12 || !(i == this.convertYearIntoMonth() - 1)) {
+          installmentCount1 = 0;
+          this.amortization.installment = installmentCount;
+          installmentCount++;
+        }
+
+      }
       // console.log(this.amortization);
       this.amortizationValues.push(this.amortization);
       this.amortization = {
+        // barTotalPayment: null,
+        // barIntrestTotalPayment: null,
+        // barPrincipalPayment: null,
         installment: null,
         principal: null,
         interest: null,
@@ -133,6 +167,9 @@ export class AppComponent implements OnInit {
       interest = 0;
       principal = 0;
     }
+    // console.log(this.barIntrestTotalPayment);
+    // console.log(this.barTotalPayment);
+    // console.log(this.barYear);
   }
 
   calculateEmi() {
