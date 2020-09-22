@@ -8,4 +8,5 @@ export interface IAmortization {
   balance: number;
   totalPayment: number;
   startingLoanBalance: number;
+  loanPaidTodate: number;
 }

@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
     balance: null,
     totalPayment: null,
     startingLoanBalance: null,
+    loanPaidTodate: null,
   };
 
   loanTypeValue = [
@@ -99,6 +100,7 @@ export class AppComponent implements OnInit {
     for (let i = 0; i < this.convertYearIntoMonth(); i++) {
       let interest = loanAmount * this.calculateRateOfInterestMonthly();
       let principal = emi - interest;
+      this.amortization.loanPaidTodate = (principal / loanAmount) * 100;
       // console.log(this.amortizationValues[i].installment);
       this.amortization.principal = principal;
       this.amortization.interest = interest;
@@ -117,6 +119,7 @@ export class AppComponent implements OnInit {
         balance: null,
         totalPayment: null,
         startingLoanBalance: null,
+        loanPaidTodate: null
       };
       interest = 0;
       principal = 0;
@@ -192,14 +195,14 @@ export class AppComponent implements OnInit {
         // console.log(monthCount);
         if (monthCount == 12 || i == 0) {
           if (!(i == 0)) {
-            this.installmentLabel.push(yearCounter);
+            this.installmentLabel.push('Year ' + yearCounter);
             this.amortizationValues[i].installment = yearCounter;
             // yearWisePrincipalAmount.push(principalAmount);
             yearCounter++;
             // console.log('*' + monthCount);
             monthCount = 1;
           } else {
-            this.installmentLabel.push(yearCounter);
+            this.installmentLabel.push('Year ' + yearCounter);
             this.amortizationValues[i].installment = yearCounter;
             yearCounter++;
             // console.log('#' + monthCount);
@@ -207,7 +210,7 @@ export class AppComponent implements OnInit {
         } else if (i == repatedTimes - 1 && monthCount == 12) {
           // console.log(monthCount);
           this.amortizationValues[i].installment = yearCounter;
-          this.installmentLabel.push(yearCounter);
+          this.installmentLabel.push('Year ' + yearCounter);
           // yearWisePrincipalAmount.push(principalAmount);
           yearCounter++;
           // console.log(monthCount);
