@@ -1,35 +1,40 @@
-<div class="container mt-5" *ngIf="amortizationValues?.length">
-  <div class="row">
+<div class="row mt-2">
+  <ng-container *ngIf="amortizationValues?.length">
     <div class="col">
       <div class="float-right">
         <button class="btn btn-success text-white" type="button" (click)="exportTableAsExcelFile(tableData)">Download
           Report</button>
       </div>
-
     </div>
-    <table class="table table-bordered mt-2" #tableData>
-      <thead class="thead-light">
-        <tr>
-          <th class="text-md-center" style="width: 30px;">Installments</th>
-          <th class="text-md-center">Starting Loan Amount</th>
-          <th class="text-md-center">Principal Amount</th>
-          <th class="text-md-center">Interest Amount</th>
-          <th class="text-md-center">Payments</th>
-          <th class="text-md-center">Balance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let emi of amortizationValues">
-          <th class="text-md-center" scope="row">{{ emi.installment?'Year '+emi.installment:'' }}</th>
-          <td class="text-md-center">{{ emi.startingLoanBalance | roundTheNumber | currency: "INR" }}</td>
-          <td class="text-md-center">{{ emi.principal | roundTheNumber | currency: "INR" }}</td>
-          <td class="text-md-center">{{ emi.interest | roundTheNumber | currency: "INR"}}</td>
-          <td class="text-md-center">{{ emi.totalPayment | roundTheNumber  | currency: "INR" }}</td>
-          <td class="text-md-center">
-            {{ (emi.balance < 0 ? 0 : emi.balance) | roundTheNumber | currency: "INR"  }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="table-responsive">
+      <table class="table table-bordered mt-2" #tableData>
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Installments</th>
+            <th scope="col">Starting Loan Amount</th>
+            <th scope="col">Principal Amount</th>
+            <th scope="col">Interest Amount</th>
+            <th scope="col">Payments</th>
+            <th scope="col">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let emi of amortizationValues">
+            <th scope="row" class="text-center">{{ emi.installment?'Year '+emi.installment:'' }}</th>
+            <td class="text-center"><i class="fa fa-inr"
+                aria-hidden="true"></i>{{ emi.startingLoanBalance | roundTheNumber}}</td>
+            <td class="text-center"><i class="fa fa-inr" aria-hidden="true"></i>{{ emi.principal | roundTheNumber}}
+            </td>
+            <td class="text-center"><i class="fa fa-inr" aria-hidden="true"></i>{{ emi.interest | roundTheNumber}}
+            </td>
+            <td class="text-center"><i class="fa fa-inr" aria-hidden="true"></i>{{ emi.totalPayment | roundTheNumber}}
+            </td>
+            <td class="text-center"><i class="fa fa-inr" aria-hidden="true"></i>
+              {{ (emi.balance < 0 ? 0 : emi.balance) | roundTheNumber }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 </div>

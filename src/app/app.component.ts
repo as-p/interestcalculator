@@ -7,6 +7,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-root',
@@ -15,15 +17,21 @@ import {
 })
 export class AppComponent implements OnInit {
   myForm: FormGroup;
+
+  excelFileName = ' ';
+  LineChartDataSet = [];
+  installmentLable = [];
+  yearWisePrincipalAmount = [];
+  yearWiseInterestAmount = [];
   pieChart = [];
-  barTotalPayment = [];
-  barIntrestTotalPayment = [];
-  barYear = [];
   change = 1;
+
   emiValue = 0;
   totalIntrest = 0;
   totalAmountPaid = 0;
-  LoanCalValue: ILoanCalculatorField;
+
+  LoanCalValue: ILoanCalculatorField; //get form values.
+  amortizationValues: IAmortization[] = []; //calculated Amortization table vaules.
   amortization: IAmortization = {
     installment: null,
     principal: null,
@@ -33,7 +41,6 @@ export class AppComponent implements OnInit {
     startingLoanBalance: null,
   };
 
-  amortizationValues: IAmortization[] = [];
   loanTypeValue = [
     { id: 1, name: 'Home' },
     { id: 2, name: 'Auto' },
@@ -43,23 +50,7 @@ export class AppComponent implements OnInit {
     { id: 6, name: 'Other' },
   ];
 
-  constructor(private fb: FormBuilder) { }
-
-  get loanAmount() {
-    return this.myForm.get('loanAmount');
-  }
-  get loanTerm() {
-    return this.myForm.get('loanTerm');
-  }
-  get interestRate() {
-    return this.myForm.get('interestRate');
-  }
-  get loanType() {
-    return this.myForm.get('loanType');
-  }
-  get termType() {
-    return this.myForm.get('termType');
-  }
+  constructor(private fb: FormBuilder, private toastr: ToastrService) { }
   ngOnInit() {
     this.myForm = this.fb.group({
       loanAmount: [
@@ -77,11 +68,15 @@ export class AppComponent implements OnInit {
     this.LoanCalValue = form.value;
     this.totalAmountPaid = 0;
     this.totalIntrest = 0;
-    this.calculateAmortization();
-    // console.log(this.amortizationValues);
     this.emiValue = this.calculateEmi();
+    this.excelFileName = this.loanTypeValue[this.LoanCalValue.loanType - 1].name;
+    this.calculateAmortization();
+    this.createInstallmentTable();
     this.createPieChartValue();
-    // console.log(this.amortizationValues);
+    this.calculateYearWisePrincipal();
+    this.calculateYearWiseInterest();
+    this.createLineChartDataset();
+    // console.log(formatDate(new Date(), 'dd-MM-yyyy', 'en'));
   }
 
   calculateRateOfInterestMonthly(): number {
@@ -95,19 +90,9 @@ export class AppComponent implements OnInit {
   }
 
   calculateAmortization() {
-    this.barYear = [];
-    this.barIntrestTotalPayment = [];
-    this.barTotalPayment = []
-    let barYear = (new Date()).getFullYear();
-    let barTotalPayment = 0;
-    let barIntrestTotalPayment = 0;
-    // let barPrincipalPayment = 0;
-    let installmentCount1 = 0;
-    let installmentCount = (new Date()).getFullYear();
-    // console.log(this.amortization);
     this.amortizationValues = [];
     let emi = this.calculateEmi();
-    // console.log(emi);
+    console.log(emi);
     let loanAmount = this.LoanCalValue.loanAmount;
     let startingLoanBalance = loanAmount;
     // console.log(this.convertYearIntoMonth());
@@ -124,25 +109,6 @@ export class AppComponent implements OnInit {
       this.amortization.balance = loanAmount;
       this.amortization.totalPayment = emi;
       this.totalAmountPaid += emi;
-      if (installmentCount1 < 12) {
-
-        barTotalPayment += this.amortization.totalPayment;
-        barIntrestTotalPayment += this.amortization.interest;
-        // barPrincipalPayment += this.amortization.principal;    
-        installmentCount1++;
-      } if (installmentCount1 == 12 || i == this.convertYearIntoMonth() - 1) {
-        this.barYear.push(barYear);
-        ++barYear;
-        this.barTotalPayment.push(Math.round(barTotalPayment));
-        this.barIntrestTotalPayment.push(Math.round(barIntrestTotalPayment));
-        if (installmentCount1 == 12 || !(i == this.convertYearIntoMonth() - 1)) {
-          installmentCount1 = 0;
-          this.amortization.installment = installmentCount;
-          installmentCount++;
-        }
-
-      }
-      // console.log(this.amortization);
       this.amortizationValues.push(this.amortization);
       this.amortization = {
         installment: null,
@@ -155,13 +121,11 @@ export class AppComponent implements OnInit {
       interest = 0;
       principal = 0;
     }
-
   }
 
   calculateEmi() {
     let rateOfIntrest = this.calculateRateOfInterestMonthly() + 1;
     // console.log(+this.convertYearIntoMonth());
-
     return (
       (this.LoanCalValue.loanAmount *
         this.calculateRateOfInterestMonthly() *
@@ -175,12 +139,14 @@ export class AppComponent implements OnInit {
     if (loanTermValue) {
       if (this.myForm.get('termType').value == 1) {
         this.change = 1;
+        // this.toastr.success('Selected Tenure type is Year');
         this.myForm.patchValue({
           loanTerm: loanTermValue / 12,
         });
       }
       if (this.myForm.get('termType').value == 2) {
         this.change = 2;
+        // this.toastr.success('Selected Tenure type is Month');
         this.myForm.patchValue({
           loanTerm: loanTermValue * 12,
         });
@@ -193,5 +159,95 @@ export class AppComponent implements OnInit {
     this.pieChart = [];
     this.pieChart.push(Math.round(this.totalAmountPaid));
     this.pieChart.push(Math.round(this.totalIntrest));
+  }
+  createLineChartDataset() {
+    this.LineChartDataSet = [];
+    for (let i = 0; i < this.amortizationValues.length; i++) {
+      if ((!(this.amortizationValues[i].installment == null)) && (i != 0)) {
+        this.LineChartDataSet.push(Math.round(this.amortizationValues[i].balance));
+      }
+      if ((this.amortizationValues.length - 1) == i) {
+        this.LineChartDataSet.push(Math.round(this.amortizationValues[i].balance));
+      }
+
+    }
+  }
+  //create table view
+  createInstallmentTable() {
+    let repatedTimes = Math.round(this.convertYearIntoMonth());
+    this.installmentLable = [];
+    // this.calculateAmortization();
+    let d = new Date();
+    let n = d.getMonth() + 1;
+    let monthCount = n;
+    let yearCounter = 1;
+    // console.log(n);
+    for (let i = 0; i < repatedTimes; i++) {
+      // console.log(repatedTimes);
+      if (monthCount <= 12) {
+        // console.log(monthCount);
+        if (monthCount == 12 || i == 0) {
+          if (!(i == 0)) {
+            this.installmentLable.push(yearCounter);
+            this.amortizationValues[i].installment = yearCounter;
+            // yearWisePrincipalAmount.push(principalAmount);
+            yearCounter++;
+            // console.log(monthCount);
+            monthCount = 1;
+          } else {
+            this.installmentLable.push(yearCounter);
+            this.amortizationValues[i].installment = yearCounter;
+            yearCounter++;
+          }
+        } else if (i == repatedTimes - 1 && repatedTimes < 12) {
+          console.log(monthCount);
+          this.amortizationValues[i].installment = yearCounter;
+          this.installmentLable.push(yearCounter);
+          // yearWisePrincipalAmount.push(principalAmount);
+          yearCounter++;
+          // console.log(monthCount);
+          monthCount = 1;
+        }
+        else {
+          monthCount++;
+        }
+      }
+    }
+    // console.log(this.amortizationValues);
+    // console.log(this.installmentLable);
+  }
+
+  calculateYearWisePrincipal() {
+    this.yearWisePrincipalAmount = [];
+    let principalAmount = 0;
+    for (let i = 0; i < this.amortizationValues.length; i++) {
+      if ((!(this.amortizationValues[i].installment == null)) && (i != 0)) {
+        this.yearWisePrincipalAmount.push(Math.round(principalAmount));
+        principalAmount = 0;
+      }
+      if ((this.amortizationValues.length - 1) == i) {
+        principalAmount += this.amortizationValues[i].principal;
+        this.yearWisePrincipalAmount.push(Math.round(principalAmount));
+      }
+      principalAmount += this.amortizationValues[i].principal;
+    }
+    // console.log(yearWisePrincipalAmount);
+  }
+
+  calculateYearWiseInterest() {
+    this.yearWiseInterestAmount = [];
+    let interestAmount = 0;
+    for (let i = 0; i < this.amortizationValues.length; i++) {
+      if ((!(this.amortizationValues[i].installment == null)) && (i != 0)) {
+        this.yearWiseInterestAmount.push(Math.round(interestAmount));
+        interestAmount = 0;
+      }
+      if ((this.amortizationValues.length - 1) == i) {
+        interestAmount += this.amortizationValues[i].interest;
+        this.yearWiseInterestAmount.push(Math.round(interestAmount));
+      }
+      interestAmount += this.amortizationValues[i].interest;
+    }
+    // console.log(this.yearWiseInterestAmount);
   }
 }

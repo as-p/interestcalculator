@@ -1,44 +1,71 @@
-<div class="jumbotron jumbotron-fluid ">
+<div class="jumbotron d-flex" style="padding: 3rem 2rem;">
   <div class="container">
-    <h1 class="display-5">Loan Repayment Calculator</h1>
+    <div class="row">
+      <h3 class="display-4 font-weight-bold">Loan Repayment Calculator</h3>
+    </div>
   </div>
 </div>
 
 <form [formGroup]="myForm" (ngSubmit)="onSubmit(myForm)">
-  <div class="container card">
+  <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 card">
         <div class="row mt-4">
           <div class="col-md-6">
             <div class="form-group">
               <label for="loanAmount">Enter Loan Amount</label>
-              <input formControlName="loanAmount" type="number" class="form-control" id="loanAmount"
+              <input currencyMask formControlName="loanAmount" type="text" class="form-control" id="loanAmount"
                 placeholder="Enter Amount" class="form-control" />
-              <div *ngIf="loanAmount.touched && loanAmount.invalid">
-                <span class="text-danger" *ngIf="loanAmount.errors.required">
-                  Required!!
+              <div *ngIf="myForm.get('loanAmount').touched && myForm.get('loanAmount').invalid">
+                <span class="text-danger" *ngIf="myForm.get('loanAmount').hasError('required')">
+                  *Required
+                </span>
+                <span class="text-danger"
+                  *ngIf="myForm.get('loanAmount').hasError('negativeValue')&& !myForm.get('loanAmount').hasError('required')">
+                  *Negative value are not allowed.
+                </span>
+                <span class="text-danger"
+                  *ngIf="myForm.get('loanAmount').hasError('valueIsZero')&& !myForm.get('loanAmount').hasError('required')">
+                  *Zero value are not allowed.
                 </span>
               </div>
             </div>
 
             <div class="form-group">
               <label for="loanTerm">Enter Loan Tenure</label>
-              <input formControlName="loanTerm" type="number" class="form-control" id="loanTerm"
-                placeholder="Enter Loan Term" class="form-control" />
-              <div *ngIf="loanTerm.touched && loanTerm.invalid">
-                <span class="text-danger" *ngIf="loanTerm.errors.required">
-                  Required!!
+              <input formControlName="loanTerm"
+                [value]="change==1 ?(myForm.get('loanTerm').value % 1==0 ? (myForm.get('loanTerm').value | number : '1.0-0'):(myForm.get('loanTerm').value | number : '1.1-1')):(myForm.get('loanTerm').value | number : '1.0-0')"
+                type="number" class="form-control" id="loanTerm" placeholder="Enter Loan Term" class="form-control" />
+              <div *ngIf="myForm.get('loanTerm').touched && myForm.get('loanTerm').invalid">
+                <span class="text-danger" *ngIf="myForm.get('loanTerm').hasError('required')">
+                  *Required
+                </span>
+                <span class="text-danger"
+                  *ngIf="myForm.get('loanTerm').hasError('negativeValue')&& !myForm.get('loanTerm').hasError('required')">
+                  *Negative value are not allowed.
+                </span>
+                <span class="text-danger"
+                  *ngIf="myForm.get('loanTerm').hasError('valueIsZero')&& !myForm.get('loanTerm').hasError('required')">
+                  *Zero value are not allowed.
                 </span>
               </div>
             </div>
 
             <div class="form-group">
               <label for="interestRate">Enter Interest Rate </label>
-              <input formControlName="interestRate" type="number" class="form-control" id="interestRate"
-                placeholder="Enter Interest Rate" class="form-control" />
-              <div *ngIf="interestRate.touched && interestRate.invalid">
-                <span class="text-danger" *ngIf="interestRate.errors.required">
-                  Required!!
+              <input mask="percent" suffix="%" mask="separator" formControlName="interestRate" type="text"
+                class="form-control" id="interestRate" placeholder="Enter Interest Rate" class="form-control" />
+              <div *ngIf="myForm.get('interestRate').touched && myForm.get('interestRate').invalid">
+                <span class="text-danger" *ngIf="myForm.get('interestRate').hasError('required')">
+                  *Required
+                </span>
+                <span class="text-danger"
+                  *ngIf="myForm.get('interestRate').hasError('negativeValue')&& !myForm.get('interestRate').hasError('required')">
+                  *Negative value are not allowed.
+                </span>
+                <span class="text-danger"
+                  *ngIf="myForm.get('interestRate').hasError('valueIsZero')&& !myForm.get('interestRate').hasError('required')">
+                  *Zero value are not allowed.
                 </span>
               </div>
             </div>
@@ -52,19 +79,19 @@
                   {{ lType.name }}
                 </option>
               </select>
-              <div *ngIf="loanType.touched && loanType.invalid">
-                <span class="text-danger" *ngIf="loanType.errors.required">
-                  Required!!
+              <div *ngIf="myForm.get('loanType').touched && myForm.get('loanType').invalid">
+                <span class="text-danger" *ngIf="myForm.get('loanType').hasError('required')">
+                  *Required
                 </span>
               </div>
             </div>
             <div class="form-group">
               <div class="btn-group btn-group-toggle btn-block margin-top" data-toggle="buttons">
-                <label class="btn btn-primary" [ngClass]="change===1?'active':''">
+                <label class="btn btn-prime" [ngClass]="change===1?'active':''">
                   <input type="radio" (change)="onChangeValue()" formControlName="termType" id="option1" value="1"
                     autocomplete="off"> Year
                 </label>
-                <label class="btn btn-primary " [ngClass]="change===2?'active':''">
+                <label class="btn btn-prime " [ngClass]="change===2?'active':''">
                   <input type="radio" (change)="onChangeValue()" formControlName="termType" id="option2" value="2"
                     autocomplete="off"> Month
                 </label>
@@ -76,30 +103,14 @@
               <button [disabled]="myForm.invalid" type="submit" class="btn btn-primary btn-block">
                 Calculate EMI
               </button>
-              <div *ngIf="
-                          (loanTerm.touched && loanTerm.invalid) ||
-                          (loanAmount.touched && loanAmount.invalid) ||
-                          (interestRate.touched && interestRate.invalid)
-                        ">
-                <span class="text-danger" *ngIf="
-                            loanTerm.errors?.negativeValue ||
-                            loanAmount.errors?.negativeValue ||
-                            termType.errors?.negativeValue
-                          ">
-                  Remove Negative Value!!
-                </span>
-              </div>
             </div>
           </div>
         </div>
-
-
-
       </div>
       <div class="col-md-6">
         <div class="row">
           <div class="card col-md-12 border border-primary">
-            <div class="card-body col-md-8 offset-2">
+            <div class="card-body">
               <h6 class="text-md-center">MINIMUM MONTHLY PAYMENT</h6>
               <h3 class="text-md-center">{{ emiValue | roundTheNumber | currency: "INR" }}</h3>
             </div>
@@ -121,16 +132,15 @@
             </div>
           </div>
         </div>
-
-
-
       </div>
     </div>
+    <div class="mt-4">
+      <chart *ngIf="installmentLable?.length" [lineBalance]="LineChartDataSet" [pieChart]="pieChart"
+        [barTotalPayment]="yearWisePrincipalAmount" [barIntrestTotalPayment]="yearWiseInterestAmount"
+        [barYear]="installmentLable">
+      </chart>
+    </div>
+    <dispaly-amortization [excelFileName]="excelFileName" [amortizationValues]="amortizationValues">
+    </dispaly-amortization>
   </div>
 </form>
-<div class="container mt-5">
-  <chart *ngIf="barTotalPayment?.length && barIntrestTotalPayment?.length&& barYear?.length" [pieChart]="pieChart"
-    [barTotalPayment]="barTotalPayment" [barIntrestTotalPayment]="barIntrestTotalPayment" [barYear]="barYear">
-  </chart>
-</div>
-<dispaly-amortization [amortizationValues]="amortizationValues"></dispaly-amortization>
