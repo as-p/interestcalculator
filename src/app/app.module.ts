@@ -11,24 +11,24 @@ import { ChartsModule } from 'ng2-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+// import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
+import { NgxMaskModule } from 'ngx-mask'
 
 
-export const customCurrencyMaskConfig = {
-  align: "left",
-  allowNegative: false,
-  allowZero: false,
-  decimal: ",",
-  precision: 0,
-  prefix: "₹",
-  suffix: "",
-  thousands: "",
-  nullable: false,
-  min: null,
-  max: null,
-  inputMode: CurrencyMaskInputMode.NATURAL
-};
+// export const customCurrencyMaskConfig = {
+//   align: "left",
+//   allowNegative: false,
+//   allowZero: false,
+//   decimal: ",",
+//   precision: 0,
+//   prefix: "₹",
+//   suffix: "",
+//   thousands: "",
+//   nullable: false,
+//   min: null,
+//   max: null,
+//   inputMode: CurrencyMaskInputMode.NATURAL
+// };
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ export const customCurrencyMaskConfig = {
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     FontAwesomeModule,
-    NgxCurrencyModule.forRoot(customCurrencyMaskConfig),
+    // NgxCurrencyModule.forRoot(customCurrencyMaskConfig),
     NgxMaskModule.forRoot()
   ],
   providers: [],

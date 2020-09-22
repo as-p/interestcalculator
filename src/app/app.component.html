@@ -14,8 +14,8 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="loanAmount">Enter Loan Amount</label>
-              <input currencyMask formControlName="loanAmount" type="text" class="form-control" id="loanAmount"
-                placeholder="Enter Amount" class="form-control" />
+              <input prefix="₹" thousandSeparator="," mask="separator" formControlName="loanAmount" type="text"
+                class="form-control" id="loanAmount" placeholder="Enter Amount" class="form-control" />
               <div *ngIf="myForm.get('loanAmount').touched && myForm.get('loanAmount').invalid">
                 <span class="text-danger" *ngIf="myForm.get('loanAmount').hasError('required')">
                   *Required
@@ -135,9 +135,9 @@
       </div>
     </div>
     <div class="mt-4">
-      <chart *ngIf="installmentLable?.length" [lineBalance]="LineChartDataSet" [pieChart]="pieChart"
+      <chart *ngIf="installmentLabel?.length" [lineBalance]="LineChartDataSet" [pieChart]="pieChart"
         [barTotalPayment]="yearWisePrincipalAmount" [barIntrestTotalPayment]="yearWiseInterestAmount"
-        [barYear]="installmentLable">
+        [barYear]="installmentLabel">
       </chart>
     </div>
     <dispaly-amortization [excelFileName]="excelFileName" [amortizationValues]="amortizationValues">

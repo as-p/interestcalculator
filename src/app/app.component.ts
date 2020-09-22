@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
   excelFileName = ' ';
   LineChartDataSet = [];
-  installmentLable = [];
+  installmentLabel = [];
   yearWisePrincipalAmount = [];
   yearWiseInterestAmount = [];
   pieChart = [];
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
   calculateAmortization() {
     this.amortizationValues = [];
     let emi = this.calculateEmi();
-    console.log(emi);
+    // console.log(emi);
     let loanAmount = this.LoanCalValue.loanAmount;
     let startingLoanBalance = loanAmount;
     // console.log(this.convertYearIntoMonth());
@@ -151,6 +151,8 @@ export class AppComponent implements OnInit {
           loanTerm: loanTermValue * 12,
         });
       }
+    } else {
+      this.toastr.error('please enter a Loan Term');
     }
   }
 
@@ -175,7 +177,9 @@ export class AppComponent implements OnInit {
   //create table view
   createInstallmentTable() {
     let repatedTimes = Math.round(this.convertYearIntoMonth());
-    this.installmentLable = [];
+    // console.log(repatedTimes);
+
+    this.installmentLabel = [];
     // this.calculateAmortization();
     let d = new Date();
     let n = d.getMonth() + 1;
@@ -188,33 +192,37 @@ export class AppComponent implements OnInit {
         // console.log(monthCount);
         if (monthCount == 12 || i == 0) {
           if (!(i == 0)) {
-            this.installmentLable.push(yearCounter);
+            this.installmentLabel.push(yearCounter);
             this.amortizationValues[i].installment = yearCounter;
             // yearWisePrincipalAmount.push(principalAmount);
             yearCounter++;
-            // console.log(monthCount);
+            // console.log('*' + monthCount);
             monthCount = 1;
           } else {
-            this.installmentLable.push(yearCounter);
+            this.installmentLabel.push(yearCounter);
             this.amortizationValues[i].installment = yearCounter;
             yearCounter++;
+            // console.log('#' + monthCount);
           }
-        } else if (i == repatedTimes - 1 && repatedTimes < 12) {
-          console.log(monthCount);
+        } else if (i == repatedTimes - 1 && monthCount == 12) {
+          // console.log(monthCount);
           this.amortizationValues[i].installment = yearCounter;
-          this.installmentLable.push(yearCounter);
+          this.installmentLabel.push(yearCounter);
           // yearWisePrincipalAmount.push(principalAmount);
           yearCounter++;
           // console.log(monthCount);
+          console.log('z' + monthCount);
           monthCount = 1;
+          // console.log('z' + monthCount);
         }
         else {
+          // console.log('x' + monthCount);
           monthCount++;
         }
       }
     }
     // console.log(this.amortizationValues);
-    // console.log(this.installmentLable);
+    // console.log(this.installmentLabel);
   }
 
   calculateYearWisePrincipal() {
